@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Base">
+      <UniqueIdentifier>{932c20b4-385e-494e-859a-6bb308a3a56b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Base">
+      <UniqueIdentifier>{a3fe9e21-c5e7-4128-86dc-3593329b13d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Test">
+      <UniqueIdentifier>{7c724338-a225-49ea-b593-25eea21470ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Test">
+      <UniqueIdentifier>{3c103f86-f564-46c1-ac35-b74168f991b6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuantMateResources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessFigure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapResource.cpp">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="OverlappedWindow.cpp">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestController.cpp">
+      <Filter>Source Files\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="TestFactory.cpp">
+      <Filter>Source Files\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScene.cpp">
+      <Filter>Source Files\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GameController.cpp">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Coordinates.cpp">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="QuantObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="QuantMateResources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessFigure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawable.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapResource.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="OverlappedWindow.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObject.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Coordinates.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GameController.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GameResources.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="QuantMateFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestController.h">
+      <Filter>Header Files\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="TestFactory.h">
+      <Filter>Header Files\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScene.h">
+      <Filter>Header Files\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="QuantState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuantObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Chess_bdt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_blt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_kdt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_klt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_ndt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_nlt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_pdt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_plt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_qdt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_qlt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_rdt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Chess_rlt45.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
