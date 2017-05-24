@@ -10,8 +10,6 @@ CBoard::CBoard(CScene* scene, Coordinates position, int width) {
 	squareWidth = (boardRect.right - boardRect.left - 2 * BOARD_BORDER_OFFSET) / 8;
 	squareRest = (boardRect.right - boardRect.left - 2 * BOARD_BORDER_OFFSET) % 8;
 	this->scene = scene;
-	checkWhite = false;
-	checkBlack = false;
 }
 
 Gdiplus::RectF CBoard::GetBox(const Coordinates& position) const
@@ -91,19 +89,10 @@ void CBoard::SetFigure(CChessFigure& figure)
 	figures[boardPosition.X][boardPosition.Y] = &figure;
 }
 
-void CBoard::SetKings(CChessFigure* blackKing, CChessFigure* whiteKing)
-{
-	this->blackKing = blackKing;
-	this->whiteKing = whiteKing;
-}
-
 CBoard::MoveType CBoard::QuantMoveFigure(Coordinates destination)
 {
 	auto position = selectedFigure->GetBoardPosition();
 	auto status = Moved;
-	/*if( ValidateCheck(selectedFigure->GetColor(), selectedFigure->GetBoardPosition(), destination) ) {
-		return ImpossibleMove;
-	}*/
 	if( position.X == destination.X && position.Y == destination.Y ) {
 		selectedFigure->SetUnselected();
 		return status;
@@ -128,31 +117,6 @@ CBoard::MoveType CBoard::MoveFigure(Coordinates destination)
 {
 	auto position = selectedFigure->GetBoardPosition();
 	auto status = Moved;
-	/*if( ValidateCheck(selectedFigure->GetColor(), selectedFigure->GetBoardPosition(), destination) ) {
-		return ImpossibleMove;
-	}*/
-	
-	//selectedFigure->SetUnselected();
-	//this->SetFigure(*selectedFigure);
-	/*if( IsCheck((CChessFigure::FigureColor)((selectedFigure->GetColor() + 1) % 2), figures) ) {
-		if( selectedFigure->GetColor() != CChessFigure::WHITE ) {
-			checkWhite = true;
-			if( IsMate(CChessFigure::WHITE) ) {
-				status = BlackWins;
-			}
-		} else {
-			checkBlack = true;
-			if( IsMate(CChessFigure::BLACK) ) {
-				status = WhiteWins;
-			}
-		}
-	}
-	if( selectedFigure->GetColor() == CChessFigure::WHITE  && checkWhite) {
-		checkWhite = false;
-	}
-	if( selectedFigure->GetColor() == CChessFigure::BLACK  && checkBlack ) {
-		checkBlack = false;
-	}*/
 	return SetFigureWithCollapse(destination);
 }
 
@@ -179,6 +143,10 @@ CBoard::MoveType CBoard::SetFigureWithCollapse(Coordinates destination)
 			figures[position.X][position.Y] = nullptr;
 			figures[destination.X][destination.Y] = selectedFigure;
 			selectedFigure->SetBoardPosition(destination);
+		} else {
+			figures[position.X][position.Y] = nullptr;
+			figures[destination.X][destination.Y] = selectedFigure;
+			selectedFigure->SetBoardPosition(destination);
 		}
 	}
 	else {
@@ -189,218 +157,6 @@ CBoard::MoveType CBoard::SetFigureWithCollapse(Coordinates destination)
 	this->SetFigure(*selectedFigure);
 	return status;
 }
-
-/*bool CBoard::IsCheck(CChessFigure::FigureColor color, CChessFigure* figures[8][8])
-{
-	Coordinates kingCoords;
-	if( color == CChessFigure::WHITE ) {
-		kingCoords = whiteKing->GetBoardPosition();
-	} else {
-		kingCoords = blackKing->GetBoardPosition();
-	}
- 	//Check knights
-	if( ((kingCoords.X + 1 < 8 && kingCoords.Y + 2 < 8) && figures[kingCoords.X + 1][kingCoords.Y + 2] &&
-			figures[kingCoords.X + 1][kingCoords.Y + 2]->GetFigure() == CChessFigure::KNIGHT &&
-			figures[kingCoords.X + 1][kingCoords.Y + 2]->GetColor() != color) || 
-		((kingCoords.X + 1 < 8 && kingCoords.Y - 2 >= 0) && figures[kingCoords.X + 1][kingCoords.Y - 2] &&
-			figures[kingCoords.X + 1][kingCoords.Y - 2]->GetFigure() == CChessFigure::KNIGHT &&
-			figures[kingCoords.X + 1][kingCoords.Y - 2]->GetColor() != color) ||
-		((kingCoords.X + 2 < 8 && kingCoords.Y + 1 < 8) && figures[kingCoords.X + 2][kingCoords.Y + 1] &&
-			figures[kingCoords.X + 2][kingCoords.Y + 1]->GetFigure() == CChessFigure::KNIGHT &&
-			figures[kingCoords.X + 2][kingCoords.Y + 1]->GetColor() != color) || 
-		((kingCoords.X + 2 < 8 && kingCoords.Y - 1 >= 0) && figures[kingCoords.X + 2][kingCoords.Y - 1] &&
-			figures[kingCoords.X + 2][kingCoords.Y - 1]->GetFigure() == CChessFigure::KNIGHT &&
-			figures[kingCoords.X + 2][kingCoords.Y - 1]->GetColor() != color) ||
-		((kingCoords.X - 1 >= 0 && kingCoords.Y + 2 < 8) && figures[kingCoords.X - 1][kingCoords.Y + 2] &&
-			figures[kingCoords.X - 1][kingCoords.Y + 2]->GetFigure() == CChessFigure::KNIGHT &&
-			figures[kingCoords.X - 1][kingCoords.Y + 2]->GetColor() != color) ||
-		((kingCoords.X - 1 >= 0 && kingCoords.Y - 2 >= 0) && figures[kingCoords.X - 1][kingCoords.Y - 2] &&
-			figures[kingCoords.X - 1][kingCoords.Y - 2]->GetFigure() == CChessFigure::KNIGHT &&
-			figures[kingCoords.X - 1][kingCoords.Y - 2]->GetColor() != color) ||
-		((kingCoords.X - 2 >= 0 && kingCoords.Y + 1 < 8) && figures[kingCoords.X - 2][kingCoords.Y + 1] &&
-			figures[kingCoords.X - 2][kingCoords.Y + 1]->GetFigure() == CChessFigure::KNIGHT &&
-			figures[kingCoords.X - 2][kingCoords.Y + 1]->GetColor() != color) ||
-		((kingCoords.X - 2 >= 0 && kingCoords.Y - 1 >= 0) && figures[kingCoords.X - 2][kingCoords.Y - 1] &&
-			figures[kingCoords.X - 2][kingCoords.Y - 1]->GetFigure() == CChessFigure::KNIGHT &&
-			figures[kingCoords.X - 2][kingCoords.Y - 1]->GetColor() != color) ) {
-		return true;
-	}
-	//Check straight
-	for( int i = kingCoords.X + 1; i < 8; ++i ) {
-		if( figures[i][kingCoords.Y] ) {
-			if( figures[i][kingCoords.Y]->GetColor() == color ) {
-				break;
-			}
-			if( i == kingCoords.X + 1 && figures[i][kingCoords.Y]->GetFigure() == CChessFigure::KING ){
-				return true;
-			}
-			if( figures[i][kingCoords.Y]->GetFigure() == CChessFigure::ROOK || figures[i][kingCoords.Y]->GetFigure() == CChessFigure::QUEEN ){
-				return true;
-			}
-			break;
-		}
-	}
-	for( int i = kingCoords.X - 1; i >=0; --i ) {
-		if( figures[i][kingCoords.Y] ) {
-			if( figures[i][kingCoords.Y]->GetColor() == color ) {
-				break;
-			}
-			if( i == kingCoords.X - 1 && figures[i][kingCoords.Y]->GetFigure() == CChessFigure::KING ){
-				return true;
-			}
-			if( figures[i][kingCoords.Y]->GetFigure() == CChessFigure::ROOK || figures[i][kingCoords.Y]->GetFigure() == CChessFigure::QUEEN ){
-				return true;
-			}
-			break;
-		}
-	}
-	for( int j = kingCoords.Y + 1; j < 8; ++j ) {
-		if( figures[kingCoords.X][j] ) {
-			if( figures[kingCoords.X][j]->GetColor() == color ) {
-				break;
-			}
-			if( j == kingCoords.Y + 1 && figures[kingCoords.X][j]->GetFigure() == CChessFigure::KING ){
-				return true;
-			}
-			if( figures[kingCoords.X][j]->GetFigure() == CChessFigure::ROOK || figures[kingCoords.X][j]->GetFigure() == CChessFigure::QUEEN ){
-				return true;
-			}
-			break;
-		}
-	}
-	for( int j = kingCoords.Y - 1; j >= 0; --j ) {
-		if( figures[kingCoords.X][j] ) {
-			if( figures[kingCoords.X][j]->GetColor() == color ) {
-				break;
-			}
-			if( j == kingCoords.Y - 1 && figures[kingCoords.X][j]->GetFigure() == CChessFigure::KING ){
-				return true;
-			}
-			if( figures[kingCoords.X][j]->GetFigure() == CChessFigure::ROOK || figures[kingCoords.X][j]->GetFigure() == CChessFigure::QUEEN ){
-				return true;
-			}
-			break;
-		}
-	}
-	//Check diagonal
-	for( int i = 1; kingCoords.X + i < 8 && kingCoords.Y + i < 8; ++i ) {
-		if( figures[kingCoords.X + i][kingCoords.Y + i] ) {
-			if( figures[kingCoords.X + i][kingCoords.Y + i]->GetColor() == color ) {
-				break;
-			}
-			if( i == 1 && figures[kingCoords.X + i][kingCoords.Y + i]->GetFigure() == CChessFigure::KING ){
-				return true;
-			}
-			if( figures[kingCoords.X + i][kingCoords.Y + i]->GetFigure() == CChessFigure::BISHOP || figures[kingCoords.X + i][kingCoords.Y + i]->GetFigure() == CChessFigure::QUEEN ){
-				return true;
-			}
-			break;
-		}
-	}
-	for( int i = 1; kingCoords.X + i < 8 && kingCoords.Y - i >=0 ; ++i ) {
-		if( figures[kingCoords.X + i][kingCoords.Y - i] ) {
-			if( figures[kingCoords.X + i][kingCoords.Y - i]->GetColor() == color ) {
-				break;
-			}
-			if( i == 1 && figures[kingCoords.X + i][kingCoords.Y - i]->GetFigure() == CChessFigure::KING ){
-				return true;
-			}
-			if( figures[kingCoords.X + i][kingCoords.Y - i]->GetFigure() == CChessFigure::BISHOP || figures[kingCoords.X + i][kingCoords.Y - i]->GetFigure() == CChessFigure::QUEEN ){
-				return true;
-			}
-			break;
-		}
-	}
-	for( int i = 1; kingCoords.X - i >= 0 && kingCoords.Y + i < 8; ++i ) {
-		if( figures[kingCoords.X - i][kingCoords.Y + i] ) {
-			if( figures[kingCoords.X - i][kingCoords.Y + i]->GetColor() == color ) {
-				break;
-			}
-			if( i == 1 && figures[kingCoords.X - i][kingCoords.Y + i]->GetFigure() == CChessFigure::KING ){
-				return true;
-			}
-			if( figures[kingCoords.X - i][kingCoords.Y + i]->GetFigure() == CChessFigure::BISHOP || figures[kingCoords.X - i][kingCoords.Y + i]->GetFigure() == CChessFigure::QUEEN ){
-				return true;
-			}
-			break;
-		}
-	}
-	for( int i = 1; kingCoords.X - i >= 0 && kingCoords.Y - i >= 0; ++i ) {
-		if( figures[kingCoords.X - i][kingCoords.Y - i] ) {
-			if( figures[kingCoords.X - i][kingCoords.Y - i]->GetColor() == color ) {
-				break;
-			}
-			if( i == 1 && figures[kingCoords.X - i][kingCoords.Y - i]->GetFigure() == CChessFigure::KING ){
-				return true;
-			}
-			if( figures[kingCoords.X - i][kingCoords.Y - i]->GetFigure() == CChessFigure::BISHOP || figures[kingCoords.X - i][kingCoords.Y - i]->GetFigure() == CChessFigure::QUEEN ){
-				return true;
-			}
-			break;
-		}
-	}
-	switch( color ) {
-	case CChessFigure::WHITE:
-		if( kingCoords.X - 1 >= 0 && kingCoords.Y - 1>= 0 && figures[kingCoords.X - 1][kingCoords.Y - 1] &&
-			figures[kingCoords.X - 1][kingCoords.Y - 1]->GetColor() != color &&
-			figures[kingCoords.X - 1][kingCoords.Y - 1]->GetFigure() == CChessFigure::PAWN ) {
-			return true;
-		}
-		if( kingCoords.X + 1 < 8 && kingCoords.Y - 1 >= 0 && figures[kingCoords.X + 1][kingCoords.Y - 1] &&
-			figures[kingCoords.X + 1][kingCoords.Y - 1]->GetColor() != color &&
-			figures[kingCoords.X + 1][kingCoords.Y - 1]->GetFigure() == CChessFigure::PAWN ) {
-			return true;
-		}
-		break;
-	case CChessFigure::BLACK:
-		if( kingCoords.X - 1 >= 0 && kingCoords.Y + 1 < 8 && figures[kingCoords.X - 1][kingCoords.Y + 1] &&
-			figures[kingCoords.X - 1][kingCoords.Y + 1]->GetColor() != color &&
-			figures[kingCoords.X - 1][kingCoords.Y + 1]->GetFigure() == CChessFigure::PAWN ) {
-			return true;
-		}
-		if( kingCoords.X + 1 < 8 && kingCoords.Y + 1 < 8 && figures[kingCoords.X + 1][kingCoords.Y + 1] && 
-			figures[kingCoords.X + 1][kingCoords.Y + 1]->GetColor() != color &&
-			figures[kingCoords.X + 1][kingCoords.Y + 1]->GetFigure() == CChessFigure::PAWN ) {
-			return true;
-		}
-		break;
-	}
-	return false;
-}*/
-
-/*bool CBoard::ValidateCheck(CChessFigure::FigureColor color, Coordinates from, Coordinates to)
-{
-	bool result;
-	auto oldFrom = figures[from.X][from.Y];
-	auto oldTo = figures[to.X][to.Y];
-	figures[to.X][to.Y] = figures[from.X][from.Y];
-	figures[from.X][from.Y] = nullptr;
-	if( oldFrom ) {
-		oldFrom->SetBoardPosition(to);
-	}
-	result = IsCheck(color, figures);
-	figures[from.X][from.Y] = oldFrom;
-	figures[to.X][to.Y] = oldTo;
-	if( oldFrom ) {
-		oldFrom->SetBoardPosition(from);
-	}
-	return result;
-}
-
-bool CBoard::IsMate(CChessFigure::FigureColor color)
-{
-	for( int i = 0; i < 8; ++i ) {
-		for( int j = 0; j < 8; ++j ) {
-			if( figures[i][j] && figures[i][j]->GetColor() == color ) {
-				auto moves = GetMoves(Coordinates(i, j));
-				if( moves.size() > 0 ) {
-					return false;
-				}
-			}
-		}
-	}
-	return true;
-}*/
 
 std::vector<Coordinates> CBoard::GetMoves(Coordinates position)
 {
@@ -436,40 +192,40 @@ void CBoard::GetPawnMoves(CChessFigure* figure, std::vector<Coordinates>& moves)
 	if( color == CChessFigure::WHITE ) {
 		auto destination = Coordinates(position.X, position.Y - 1);
 		if( InBound(destination) && !figures[destination.X][destination.Y] ) {
-			AddIfNotCheck(color, position, destination, moves);
+			moves.push_back(destination);
 		}
 		if( position.Y == 6 ) {
 			destination = Coordinates(position.X, position.Y - 2);
 			if( InBound(destination) && !figures[destination.X][destination.Y] ) {
-				AddIfNotCheck(color, position, destination, moves);
+				moves.push_back(destination);
 			}
 		}
 		destination = Coordinates(position.X + 1, position.Y - 1);
 		if( InBound(destination) && figures[destination.X][destination.Y] && figures[destination.X][destination.Y]->GetColor() == CChessFigure::BLACK ) {
-			AddIfNotCheck(color, position, destination, moves);
+			moves.push_back(destination);
 		}
 		destination = Coordinates(position.X - 1, position.Y - 1);
 		if( InBound(destination) && figures[destination.X][destination.Y] && figures[destination.X][destination.Y]->GetColor() == CChessFigure::BLACK ) {
-			AddIfNotCheck(color, position, destination, moves);
+			moves.push_back(destination);
 		}
 	} else {
 		auto destination = Coordinates(position.X, position.Y + 1);
 		if( InBound(destination) && !figures[destination.X][destination.Y] ) {
-			AddIfNotCheck(color, position, destination, moves);
+			moves.push_back(destination);
 		}
 		if( position.Y == 1 ) {
 			destination = Coordinates(position.X, position.Y + 2);
 			if( InBound(destination) && !figures[destination.X][destination.Y] ) {
-				AddIfNotCheck(color, position, destination, moves);
+				moves.push_back(destination);
 			}
 		}
 		destination = Coordinates(position.X + 1, position.Y + 1);
 		if( InBound(destination) && figures[destination.X][destination.Y] && figures[destination.X][destination.Y]->GetColor() == CChessFigure::WHITE ) {
-			AddIfNotCheck(color, position, destination, moves);
+			moves.push_back(destination);
 		}
 		destination = Coordinates(position.X - 1, position.Y + 1);
 		if( InBound(destination) && figures[destination.X][destination.Y] && figures[destination.X][destination.Y]->GetColor() == CChessFigure::WHITE ) {
-			AddIfNotCheck(color, position, destination, moves);
+			moves.push_back(destination);
 		}
 	}
 }
@@ -480,46 +236,46 @@ void CBoard::GetRookMoves(CChessFigure* figure, std::vector<Coordinates>& moves)
 	auto color = figure->GetColor();
 	for( int i = position.X + 1; i < 8; ++i ) {
 		if( !figures[i][position.Y] ) {
-			AddIfNotCheck(color, position, Coordinates(i, position.Y), moves);
+			moves.push_back(Coordinates(i, position.Y));
 			continue;
 		}
 		if( figures[i][position.Y]->GetColor() == color ) {
 			break;
 		}
-		AddIfNotCheck(color, position, Coordinates(i, position.Y), moves);
+		moves.push_back(Coordinates(i, position.Y));
 		break;
 	}
 	for( int i = position.X - 1; i >= 0; --i ) {
 		if( !figures[i][position.Y] ) {
-			AddIfNotCheck(color, position, Coordinates(i, position.Y), moves);
+			moves.push_back(Coordinates(i, position.Y));
 			continue;
 		}
 		if( figures[i][position.Y]->GetColor() == color ) {
 			break;
 		}
-		AddIfNotCheck(color, position, Coordinates(i, position.Y), moves);
+		moves.push_back(Coordinates(i, position.Y));
 		break;
 	}
 	for( int j = position.Y + 1; j < 8; ++j ) {
 		if( !figures[position.X][j] ) {
-			AddIfNotCheck(color, position, Coordinates(position.X, j), moves);
+			moves.push_back(Coordinates(position.X, j));
 			continue;
 		}
 		if( figures[position.X][j]->GetColor() == color ) {
 			break;
 		}
-		AddIfNotCheck(color, position, Coordinates(position.X, j), moves);
+		moves.push_back(Coordinates(position.X, j));
 		break;
 	}
 	for( int j = position.Y - 1; j >= 0; --j ) {
 		if( !figures[position.X][j] ) {
-			AddIfNotCheck(color, position, Coordinates(position.X, j), moves);
+			moves.push_back(Coordinates(position.X, j));
 			continue;
 		}
 		if( figures[position.X][j]->GetColor() == color ) {
 			break;
 		}
-		AddIfNotCheck(color, position, Coordinates(position.X, j), moves);
+		moves.push_back(Coordinates(position.X, j));
 		break;
 	}
 }
@@ -532,42 +288,42 @@ void CBoard::GetKnightMoves(CChessFigure * figure, std::vector<Coordinates>& mov
 	destination.X = position.X + 1;
 	destination.Y = position.Y - 2;
 	if( InBound(destination) && (!figures[destination.X][destination.Y] || figures[destination.X][destination.Y]->GetColor() != color) ) {
-		AddIfNotCheck(color, position, destination, moves);
+		moves.push_back(destination);
 	}
 	destination.X = position.X + 2;
 	destination.Y = position.Y - 1;
 	if( InBound(destination) && (!figures[destination.X][destination.Y] || figures[destination.X][destination.Y]->GetColor() != color) ) {
-		AddIfNotCheck(color, position, destination, moves);
+		moves.push_back(destination);
 	} 
 	destination.X = position.X + 2;
 	destination.Y = position.Y + 1;
 	if( InBound(destination) && (!figures[destination.X][destination.Y] || figures[destination.X][destination.Y]->GetColor() != color) ) {
-		AddIfNotCheck(color, position, destination, moves);
+		moves.push_back(destination);
 	}
 	destination.X = position.X + 1;
 	destination.Y = position.Y + 2;
 	if( InBound(destination) && (!figures[destination.X][destination.Y] || figures[destination.X][destination.Y]->GetColor() != color) ) {
-		AddIfNotCheck(color, position, destination, moves);
+		moves.push_back(destination);
 	}
 	destination.X = position.X - 1;
 	destination.Y = position.Y + 2;
 	if( InBound(destination) && (!figures[destination.X][destination.Y] || figures[destination.X][destination.Y]->GetColor() != color) ) {
-		AddIfNotCheck(color, position, destination, moves);
+		moves.push_back(destination);
 	}
 	destination.X = position.X - 2;
 	destination.Y = position.Y + 1;
 	if( InBound(destination) && (!figures[destination.X][destination.Y] || figures[destination.X][destination.Y]->GetColor() != color) ) {
-		AddIfNotCheck(color, position, destination, moves);
+		moves.push_back(destination);
 	}
 	destination.X = position.X - 2;
 	destination.Y = position.Y - 1;
 	if( InBound(destination) && (!figures[destination.X][destination.Y] || figures[destination.X][destination.Y]->GetColor() != color) ) {
-		AddIfNotCheck(color, position, destination, moves);
+		moves.push_back(destination);
 	}
 	destination.X = position.X - 1;
 	destination.Y = position.Y - 2;
 	if( InBound(destination) && (!figures[destination.X][destination.Y] || figures[destination.X][destination.Y]->GetColor() != color) ) {
-		AddIfNotCheck(color, position, destination, moves);
+		moves.push_back(destination);
 	}
 }
 
@@ -577,46 +333,46 @@ void CBoard::GetBishopMoves(CChessFigure* figure, std::vector<Coordinates>& move
 	auto color = figure->GetColor();
 	for( int i = 1; position.X + i < 8 && position.Y + i < 8; ++i ) {
 		if( !figures[position.X + i][position.Y + i] ) {
-			AddIfNotCheck(color, position, Coordinates(position.X + i, position.Y + i), moves);
+			moves.push_back(Coordinates(position.X + i, position.Y + i));
 			continue;
 		}
 		if( figures[position.X + i][position.Y + i]->GetColor() == color ) {
 			break;
 		}
-		AddIfNotCheck(color, position, Coordinates(position.X + i, position.Y + i), moves);
+		moves.push_back(Coordinates(position.X + i, position.Y + i));
 		break;
 	}
 	for( int i = 1; position.X + i < 8 && position.Y - i >= 0; ++i ) {
 		if( !figures[position.X + i][position.Y - i] ) {
-			AddIfNotCheck(color, position, Coordinates(position.X + i, position.Y - i), moves);
+			moves.push_back(Coordinates(position.X + i, position.Y - i));
 			continue;
 		}
 		if( figures[position.X + i][position.Y - i]->GetColor() == color ) {
 			break;
 		}
-		AddIfNotCheck(color, position, Coordinates(position.X + i, position.Y - i), moves);
+		moves.push_back(Coordinates(position.X + i, position.Y - i));
 		break;
 	}
 	for( int i = 1; position.X - i >= 0 && position.Y + i < 8; ++i ) {
 		if( !figures[position.X - i][position.Y + i] ) {
-			AddIfNotCheck(color, position, Coordinates(position.X - i, position.Y + i), moves);
+			moves.push_back(Coordinates(position.X - i, position.Y + i));
 			continue;
 		}
 		if( figures[position.X - i][position.Y + i]->GetColor() == color ) {
 			break;
 		}
-		AddIfNotCheck(color, position, Coordinates(position.X - i, position.Y + i), moves);
+		moves.push_back(Coordinates(position.X - i, position.Y + i));
 		break;
 	}
 	for( int i = 1; position.X - i >= 0 && position.Y - i >= 0; ++i ) {
 		if( !figures[position.X - i][position.Y - i] ) {
-			AddIfNotCheck(color, position, Coordinates(position.X - i, position.Y - i), moves);
+			moves.push_back(Coordinates(position.X - i, position.Y - i));
 			continue;
 		}
 		if( figures[position.X - i][position.Y - i]->GetColor() == color ) {
 			break;
 		}
-		AddIfNotCheck(color, position, Coordinates(position.X - i, position.Y - i), moves);
+		moves.push_back(Coordinates(position.X - i, position.Y - i));
 		break;
 	}
 }
@@ -633,74 +389,67 @@ void CBoard::GetKingMoves(CChessFigure * figure, std::vector<Coordinates>& moves
 	auto color = figure->GetColor();
 	if( position.X + 1 < 8 ) {
 		if( !figures[position.X + 1][position.Y] ) {
-			AddIfNotCheck(color, position, Coordinates(position.X + 1, position.Y), moves);
+			moves.push_back(Coordinates(position.X + 1, position.Y));
 		} else if( figures[position.X + 1][position.Y]->GetColor() != color ) {
-			AddIfNotCheck(color, position, Coordinates(position.X + 1, position.Y), moves);
+			moves.push_back(Coordinates(position.X + 1, position.Y));
 		}
 		if( position.Y + 1 < 8 ) {
 			if( !figures[position.X + 1][position.Y + 1] ) {
-				AddIfNotCheck(color, position, Coordinates(position.X + 1, position.Y + 1), moves);
+				moves.push_back(Coordinates(position.X + 1, position.Y + 1));
 			}
 			else if( figures[position.X + 1][position.Y + 1]->GetColor() != color ) {
-				AddIfNotCheck(color, position, Coordinates(position.X + 1, position.Y + 1), moves);
+				moves.push_back(Coordinates(position.X + 1, position.Y + 1));
 			}
 		}
 		if( position.Y - 1 >= 0 ) {
 			if( !figures[position.X + 1][position.Y - 1] ) {
-				AddIfNotCheck(color, position, Coordinates(position.X + 1, position.Y - 1), moves);
+				moves.push_back(Coordinates(position.X + 1, position.Y - 1));
 			}
 			else if( figures[position.X + 1][position.Y - 1]->GetColor() != color ) {
-				AddIfNotCheck(color, position, Coordinates(position.X + 1, position.Y - 1), moves);
+				moves.push_back(Coordinates(position.X + 1, position.Y - 1));
 			}
 		}
 	}
 	if( position.X - 1 >= 0 ) {
 		if( !figures[position.X - 1][position.Y] ) {
-			AddIfNotCheck(color, position, Coordinates(position.X - 1, position.Y), moves);
+			moves.push_back(Coordinates(position.X - 1, position.Y));
 		}
 		else if( figures[position.X - 1][position.Y]->GetColor() != color ) {
-			AddIfNotCheck(color, position, Coordinates(position.X - 1, position.Y), moves);
+			moves.push_back(Coordinates(position.X - 1, position.Y));
 		}
 		if( position.Y + 1 < 8 ) {
 			if( !figures[position.X - 1][position.Y + 1] ) {
-				AddIfNotCheck(color, position, Coordinates(position.X - 1, position.Y + 1), moves);
+				moves.push_back(Coordinates(position.X - 1, position.Y + 1));
 			}
 			else if( figures[position.X - 1][position.Y + 1]->GetColor() != color ) {
-				AddIfNotCheck(color, position, Coordinates(position.X - 1, position.Y + 1), moves);
+				moves.push_back(Coordinates(position.X - 1, position.Y + 1));
 			}
 		}
 		if( position.Y - 1 >= 0 ) {
 			if( !figures[position.X - 1][position.Y - 1] ) {
-				AddIfNotCheck(color, position, Coordinates(position.X - 1, position.Y - 1), moves);
+				moves.push_back(Coordinates(position.X - 1, position.Y - 1));
 			}
 			else if( figures[position.X - 1][position.Y - 1]->GetColor() != color ) {
-				AddIfNotCheck(color, position, Coordinates(position.X - 1, position.Y - 1), moves);
+				moves.push_back(Coordinates(position.X - 1, position.Y - 1));
 			}
 		}
 	}
 	if( position.Y + 1 < 8 ) {
 		if( !figures[position.X][position.Y + 1] ) {
-			AddIfNotCheck(color, position, Coordinates(position.X, position.Y + 1), moves);
+			moves.push_back(Coordinates(position.X, position.Y + 1));
 		}
 		else if( figures[position.X][position.Y + 1]->GetColor() != color ) {
-			AddIfNotCheck(color, position, Coordinates(position.X, position.Y + 1), moves);
+			moves.push_back(Coordinates(position.X, position.Y + 1));
 		}
 	}
 	if( position.Y - 1 >= 0 ) {
 		if( !figures[position.X][position.Y - 1] ) {
-			AddIfNotCheck(color, position, Coordinates(position.X, position.Y - 1), moves);
+			moves.push_back(Coordinates(position.X, position.Y - 1));
 		}
 		else if( figures[position.X][position.Y - 1]->GetColor() != color ) {
-			AddIfNotCheck(color, position, Coordinates(position.X, position.Y - 1), moves);
+			moves.push_back(Coordinates(position.X, position.Y - 1));
 		}
 	}
-}
-
-void CBoard::AddIfNotCheck(CChessFigure::FigureColor color, Coordinates from, Coordinates to, std::vector<Coordinates>& moves)
-{
-	//if( !ValidateCheck(color, from, to) ) {
-		moves.push_back(to);
-	//}
 }
 
 void CBoard::Collapse(CChessFigure* figure)

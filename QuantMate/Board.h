@@ -32,7 +32,6 @@ public:
 	MoveType MakeMove(CChessFigure::FigureColor color, Coordinates destination, bool quantum = false);
 
 	void SetFigure(CChessFigure& figure);
-	void SetKings(CChessFigure* blackKing, CChessFigure* whiteKing);
 
 	// Inherited via ISceneObject
 	void Render(HDC hdc) override;
@@ -45,19 +44,13 @@ private:
 	int squareWidth;
 	int squareRest;
 	CChessFigure* selectedFigure;
-	CChessFigure* blackKing;
-	CChessFigure* whiteKing;
 	CChessFigure* figures[8][8] = { nullptr };
 	CScene* scene;
-	bool checkWhite;
-	bool checkBlack;
 
 	MoveType QuantMoveFigure(Coordinates destination);
 	MoveType MoveFigure(Coordinates destination);
 	MoveType SetFigureWithCollapse(Coordinates destination);
-	//bool IsCheck(CChessFigure::FigureColor color, CChessFigure* figures[8][8]);
-	//bool ValidateCheck(CChessFigure::FigureColor color, Coordinates from, Coordinates to);
-	//bool IsMate(CChessFigure::FigureColor color);
+
 	std::vector<Coordinates> GetMoves(Coordinates position);
 	void GetPawnMoves(CChessFigure* figure, std::vector<Coordinates>& moves);
 	void GetRookMoves(CChessFigure* figure, std::vector<Coordinates>& moves);
@@ -65,7 +58,6 @@ private:
 	void GetBishopMoves(CChessFigure* figure, std::vector<Coordinates>& moves);
 	void GetQueenMoves(CChessFigure* figure, std::vector<Coordinates>& moves);
 	void GetKingMoves(CChessFigure* figure, std::vector<Coordinates>& moves);
-	void AddIfNotCheck(CChessFigure::FigureColor color, Coordinates from, Coordinates to, std::vector<Coordinates>& moves);
 	void Collapse(CChessFigure* figure);
 	bool InBound(Coordinates coords);
 };

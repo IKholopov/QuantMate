@@ -52,7 +52,6 @@ CTestScene::CTestScene(CResourceManager& manager)
 		this->AddObject(*figure, 1);
 		board->SetFigure(**figure);
 	}
-	board->SetKings(kingBlack, kingWhite);
 }
 
 CTestScene::~CTestScene()
