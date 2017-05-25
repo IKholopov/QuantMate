@@ -120,8 +120,13 @@
     <ClCompile Include="Coordinates.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="Notification.cpp" />
     <ClCompile Include="OverlappedWindow.cpp" />
+    <ClCompile Include="PauseMenu.cpp" />
+    <ClCompile Include="QuantMateController.cpp" />
+    <ClCompile Include="QuantMateFactory.cpp" />
     <ClCompile Include="QuantObject.cpp" />
     <ClCompile Include="QuantMateResources.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -140,6 +145,10 @@
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameResources.h" />
+    <ClInclude Include="MainScene.h" />
+    <ClInclude Include="Notification.h" />
+    <ClInclude Include="PauseMenu.h" />
+    <ClInclude Include="QuantMateController.h" />
     <ClInclude Include="QuantState.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="OverlappedWindow.h" />

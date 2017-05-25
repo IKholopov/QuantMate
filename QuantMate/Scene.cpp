@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-CScene::CScene()
+CScene::CScene(int width, int height): width(width), height(height)
 {
 }
 

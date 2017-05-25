@@ -3,7 +3,7 @@
 #include <gdiplus.h>
 
 #include "MainWindow.h"
-#include "TestFactory.h"
+#include "QuantMateFactory.h"
 
 int RunMainWindow(int nCmdShow)
 {
@@ -12,8 +12,8 @@ int RunMainWindow(int nCmdShow)
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 
 	CMainWindow::RegisterClass();
-	CMainWindow window(new CTestFactory());
-	if( !window.Create() ) {
+	CMainWindow window(new CQuantMateFactory());
+	if( !window.Create(720, 720) ) {
 		MessageBox(NULL, L"Failed to create MainWindow", MAIN_WINDOW_TITLE, MB_OK);
 		return 1;
 	}

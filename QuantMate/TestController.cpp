@@ -38,6 +38,11 @@ void CTestController::GetBoardRects() {
 	}
 }
 
+ControllerCommand CTestController::OnKey(long key)
+{
+	return ControllerCommand();
+}
+
 ControllerCommand CTestController::Update()
 {
 	auto command = ControllerCommand();

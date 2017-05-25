@@ -75,6 +75,21 @@
     <ClCompile Include="QuantObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QuantMateFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuantMateController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Notification.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QuantMateResources.h">
@@ -141,6 +156,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QuantObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuantMateController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Notification.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

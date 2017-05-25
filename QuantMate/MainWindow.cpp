@@ -29,7 +29,7 @@ bool CMainWindow::Create(int width, int height)
 
 		std::unique_ptr<IGameResources> resources(factory->GetResources());
 		resources->InitializeResources(resourceManager);
-		scene = std::move(std::unique_ptr<CScene>(factory->GetMainScene(resourceManager)));
+		scene = std::move(std::unique_ptr<CScene>(factory->GetMainScene(resourceManager, this->width, this->height)));
 		controller = std::move(std::unique_ptr<CGameController>(factory->GetMainController()));
 		controller->SetScene(scene.get());
 		controller->Start();
@@ -63,20 +63,20 @@ void CMainWindow::OnTimer()
 		InvalidateRect(handle, NULL, false);
 	}
 	auto command = controller->Update();
-	switch( command.Command ) {
-	case COMMAND_REDRAW:
-		InvalidateRect(handle, NULL, false);
-		break;
-	case COMMAND_EXIT:
-		SendMessage(handle, WM_DESTROY, NULL, NULL);
-		break;
-	}
+	ProcessCommand(command);
 }
 
 void CMainWindow::OnMouseClick(Coordinates coordinates)
 {
 	if( controller ) {
-		controller->OnMouseClick(coordinates);
+		ProcessCommand(controller->OnMouseClick(coordinates));
+	}
+}
+
+void CMainWindow::OnKey(long key)
+{
+	if( controller ) {
+		ProcessCommand(controller->OnKey(key));
 	}
 }
 
@@ -84,6 +84,24 @@ void CMainWindow::OnDestroy()
 {
 	KillTimer(handle, MAIN_TIMER);
 	COverlappedWindow::OnDestroy();
+}
+
+void CMainWindow::ProcessCommand(ControllerCommand& command)
+{
+	switch( command.Command ) {
+	case COMMAND_REDRAW:
+		InvalidateRect(handle, NULL, false);
+		break;
+	case COMMAND_EXIT:
+		SendMessage(handle, WM_DESTROY, NULL, NULL);
+		break;
+	case COMMAND_REDIRECT:
+		controller = std::move(std::unique_ptr<CGameController>(factory->GetController(command.ControllerId)));
+		scene = std::move(std::unique_ptr<CScene>(factory->GetScene(command.SceneId, resourceManager, width, height)));
+		controller->SetScene(scene.get());
+		controller->Start();
+		break;
+	}
 }
 
 LRESULT CMainWindow::windowProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam)
@@ -101,6 +119,9 @@ LRESULT CMainWindow::windowProc(HWND handle, UINT message, WPARAM wParam, LPARAM
 		return 0;
 	case WM_LBUTTONDOWN:
 		window->OnMouseClick(Coordinates(LOWORD(lParam), HIWORD(lParam)));
+		return 0;
+	case WM_KEYDOWN:
+		window->OnKey(wParam);
 		return 0;
 	default:
 		return DefWindowProc(handle, message, wParam, lParam);

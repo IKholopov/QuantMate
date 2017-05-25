@@ -24,7 +24,10 @@ protected:
 	void Render();
 	void OnTimer();
 	void OnMouseClick(Coordinates coordinates);
+	void OnKey(long key);
 	void OnDestroy() override;
+
+	void ProcessCommand(ControllerCommand& command);
 private:
 	const long dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 	HDC bufferDC;

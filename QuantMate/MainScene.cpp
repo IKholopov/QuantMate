@@ -1,16 +1,20 @@
-#include "TestScene.h"
+#include "MainScene.h"
 
-#include "ChessFigure.h"
-
-CTestScene::CTestScene(CResourceManager& manager, int width, int height): CScene(width, height)
+CMainScene::CMainScene(CResourceManager& manager, int width, int height): CScene(width, height)
 {
 	std::vector<CChessFigure*> figures;
-	board = new CBoard(this, Coordinates(30, 20), 640);
+	notification = new CNotification(width, height);
+	notification->FetchResources(manager);
+	this->AddObject(notification, 5);
+	menu = new CPauseMenu(width, height);
+	menu->FetchResources(manager);
+	this->AddObject(menu, 10);
+	board = new CBoard(this, Coordinates(30, 20), width < height ? width - 80 : height - 80);
 	board->FetchResources(manager);
 	this->AddObject(board, -1);
 	for( int i = 1; i < 8; i += 5 ) {
 		for( int j = 0; j < 8; ++j ) {
-			auto pawn = new CChessFigure(CChessFigure::PAWN, i == 1 ? CChessFigure::BLACK : CChessFigure::WHITE, 
+			auto pawn = new CChessFigure(CChessFigure::PAWN, i == 1 ? CChessFigure::BLACK : CChessFigure::WHITE,
 				Coordinates(j, i));
 			figures.push_back(pawn);
 		}
@@ -54,11 +58,22 @@ CTestScene::CTestScene(CResourceManager& manager, int width, int height): CScene
 	}
 }
 
-CTestScene::~CTestScene()
+CMainScene::~CMainScene()
 {
 }
 
-CBoard* CTestScene::GetBoard()
+CBoard* CMainScene::GetBoard()
 {
 	return board;
 }
+
+CPauseMenu* CMainScene::GetPauseMenu()
+{
+	return menu;
+}
+
+CNotification* CMainScene::GetNotification()
+{
+	return notification;
+}
+

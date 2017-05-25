@@ -505,6 +505,39 @@ void CBoard::Render(HDC hdc)
 			yMoved += 1;
 		}
 	}
+	for( int i = 0; i < 8; ++i ) {
+		auto box = GetBox(Coordinates(i, 0));
+		RECT rect;
+		rect.left = box.X + box.Width / 2;
+		rect.top = box.Y - 20;
+		SetBkColor(hdc, BOARD_BACKGROUND_COLOR);
+		rect.right = rect.left + 15;
+		rect.bottom = rect.top + 15;
+		wchar_t letter = L'A' + i;
+		DrawText(hdc, &letter, 1, &rect, DT_CENTER);
+		box = GetBox(Coordinates(i, 7));
+		rect.left = box.X + box.Width / 2;
+		rect.top = box.Y + box.Height;
+		SetBkColor(hdc, BOARD_BACKGROUND_COLOR);
+		rect.right = rect.left + 15;
+		rect.bottom = rect.top + 15;
+		DrawText(hdc, &letter, 1, &rect, DT_CENTER);
+		box = GetBox(Coordinates(0, i));
+		rect.left = box.X - 20;
+		rect.top = box.Y + box.Height / 2;
+		SetBkColor(hdc, BOARD_BACKGROUND_COLOR);
+		rect.right = rect.left + 15;
+		rect.bottom = rect.top + 15;
+		wchar_t number = L'8' - i;
+		DrawText(hdc, &number, 1, &rect, DT_CENTER);
+		box = GetBox(Coordinates(7, i));
+		rect.left = box.X + box.Width;
+		rect.top = box.Y + box.Height / 2;
+		SetBkColor(hdc, BOARD_BACKGROUND_COLOR);
+		rect.right = rect.left + 15;
+		rect.bottom = rect.top + 15;
+		DrawText(hdc, &number, 1, &rect, DT_CENTER);
+	}
 }
 
 bool CBoard::OnTimerTick()

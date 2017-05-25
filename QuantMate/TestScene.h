@@ -5,7 +5,7 @@
 
 class CTestScene: public CScene {
 public:
-	CTestScene(CResourceManager& manager);
+	CTestScene(CResourceManager& manager, int width, int height);
 	~CTestScene();
 
 	CBoard* GetBoard();

@@ -7,7 +7,7 @@
 
 class CScene {
 public:
-	CScene();
+	CScene(int width, int height);
 	virtual ~CScene();
 	void Render(HDC hdc);
 	bool OnTimerTick();
@@ -23,4 +23,6 @@ protected:
 
 	std::unordered_map<ISceneObject*, ZIndexedObject> objects;
 	std::multimap<int, ISceneObject*> objectsOrdered;
+	int width;
+	int height;
 };

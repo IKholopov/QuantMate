@@ -3,9 +3,9 @@
 #include "TestController.h"
 #include "QuantMateResources.h"
 
-CScene* CTestFactory::GetMainScene(CResourceManager& manager)
+CScene* CTestFactory::GetMainScene(CResourceManager& manager, int width, int height)
 {
-	return new CTestScene(manager);
+	return new CTestScene(manager, width, height);
 }
 
 CGameController* CTestFactory::GetMainController()
@@ -18,7 +18,7 @@ IGameResources* CTestFactory::GetResources()
 	return new CQuantMateResources();
 }
 
-CScene* CTestFactory::GetScene(int id, CResourceManager& manager)
+CScene* CTestFactory::GetScene(int id, CResourceManager& manager, int width, int height)
 {
 	return nullptr;
 }
