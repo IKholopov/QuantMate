@@ -33,7 +33,6 @@ CChessFigure::CChessFigure(Figure figure, FigureColor color, Coordinates positio
 
 CChessFigure::~CChessFigure()
 {
-	int a = 0;
 }
 
 void CChessFigure::SetBoardPosition(Coordinates position)
