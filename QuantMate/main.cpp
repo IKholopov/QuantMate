@@ -1,12 +1,14 @@
 #include <Windows.h>
 #include <objidl.h>
 #include <gdiplus.h>
+#include <time.h>
 
 #include "MainWindow.h"
 #include "QuantMateFactory.h"
 
 int RunMainWindow(int nCmdShow)
 {
+	srand(time(NULL));
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR           gdiplusToken;
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
